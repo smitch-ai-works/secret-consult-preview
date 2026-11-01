@@ -291,3 +291,18 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 .consultation-comparison td+td,.consultation-comparison th+th{border-left:1px solid #b6965070}
 .consultation-comparison td+td{color:#fff1cf}
 @media(max-width:480px){.sales-page .method-advantages{padding:24px 10px}.method-columns>div{padding:0 7px}.sales-page .method-columns h3{font-size:27px}.method-columns strong{font-size:15px}.method-columns p{font-size:13px;line-height:1.85}.method-columns p br{display:none}.method-advantages figcaption{font-size:13px;margin-top:18px;padding-top:14px}.consultation-comparison th{font-size:15px;padding:14px 9px}.consultation-comparison td{font-size:14px;padding:15px 10px;line-height:1.85}}
+
+/* 本人の旅先の写真。上段は人物と宿、下段は景色と食事で生活を見せる。 */
+.lifestyle-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px;margin:34px 0 0;text-align:left}
+.lifestyle-photo{min-width:0;margin:0}
+.lifestyle-photo img{display:block;width:100%;height:auto;object-fit:cover;background:#141b20;border:1px solid #b6965050}
+.lifestyle-photo.photo-portrait img{aspect-ratio:3/4;object-position:50% 100%}
+.lifestyle-photo.photo-portrait:first-child img{object-position:58% 0%}
+.lifestyle-photo.photo-landscape img{aspect-ratio:4/3;object-position:50% 55%}
+.lifestyle-photo.photo-landscape:last-child img{object-position:50% 48%}
+.lifestyle-photo figcaption{font-size:14px;line-height:1.8;color:#e2cb99;padding:9px 1px 0;letter-spacing:.02em}
+.lifestyle-single{display:block;max-width:620px;margin-inline:auto}
+.lifestyle-photo.photo-work img{aspect-ratio:4/3;object-position:50% 25%}
+.lifestyle-single figcaption{text-align:center}
+@media(max-width:700px){.lifestyle-gallery{gap:17px 10px;margin-top:27px}.lifestyle-photo figcaption{font-size:12px;padding-top:7px}.lifestyle-photo.photo-portrait img{aspect-ratio:3/4}}
+@media(max-width:359px){.lifestyle-gallery{column-gap:8px}.lifestyle-photo figcaption{font-size:11px}}
