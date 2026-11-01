@@ -310,3 +310,12 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 #lifestyle .benefit-photos{margin-top:29px}
 @media(max-width:700px){.benefit-scene{margin-top:27px}.sales-page .benefit-scene h3{font-size:23px;margin:27px 0 19px}.benefit-photos{margin-top:24px;gap:25px}.benefit-photo figcaption{font-size:18px;margin-top:13px}.benefit-photos.layout-stories{gap:29px}.benefit-photos.layout-pair{gap:10px}.benefit-photos.layout-pair figcaption{font-size:14px;margin-top:11px}.benefit-scene>.sales-copy:last-child{margin-top:25px}}
 @media(max-width:359px){.sales-page .benefit-scene h3{font-size:21px}.benefit-photo figcaption{font-size:16px}.benefit-photos.layout-pair figcaption{font-size:13px}}
+
+/* 写真を増やす箇所は、主役1枚と続く2枚を組み合わせる */
+.benefit-photos.layout-mosaic{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}
+.benefit-photos.layout-mosaic .benefit-photo:first-child{grid-column:1/-1}
+.benefit-photos.layout-mosaic .benefit-photo:not(:first-child) img{aspect-ratio:1}
+.benefit-photos.layout-mosaic .benefit-photo:not(:first-child) figcaption{font-size:17px;margin-top:13px}
+.benefit-photos.layout-pair .benefit-photo img{aspect-ratio:1}
+@media(max-width:700px){.benefit-photos.layout-mosaic{gap:21px 10px}.benefit-photos.layout-mosaic .benefit-photo:not(:first-child) figcaption{font-size:14px;margin-top:11px}}
+@media(max-width:359px){.benefit-photos.layout-mosaic .benefit-photo:not(:first-child) figcaption{font-size:13px}}
