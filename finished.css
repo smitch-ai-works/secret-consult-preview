@@ -319,3 +319,12 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 .benefit-photos.layout-pair .benefit-photo img{aspect-ratio:1}
 @media(max-width:700px){.benefit-photos.layout-mosaic{gap:21px 10px}.benefit-photos.layout-mosaic .benefit-photo:not(:first-child) figcaption{font-size:14px;margin-top:11px}}
 @media(max-width:359px){.benefit-photos.layout-mosaic .benefit-photo:not(:first-child) figcaption{font-size:13px}}
+
+/* 写真は冒頭・開催理由・申込み前へ集約し、中盤の説明を通す。 */
+.benefit-photos.layout-quad{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.benefit-photos.layout-quad .benefit-photo img{aspect-ratio:3/2}
+.benefit-photos.layout-collection{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.benefit-photos.layout-collection .benefit-photo img{aspect-ratio:4/3}
+.benefit-photos.layout-collection .benefit-photo:first-child{grid-column:1/-1}
+.benefit-photos.layout-collection .benefit-photo:first-child img{aspect-ratio:16/9}
+@media(max-width:700px){.benefit-photos.layout-quad{gap:8px}.benefit-photos.layout-collection{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
