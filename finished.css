@@ -493,3 +493,34 @@ body.sales-page{background:#05070b;color:#f8f3e7}
  .conversation-bubble p{font-size:13px}
  .conversation-plan>div span{font-size:12px;padding:8px 9px}
 }
+/* v17: 本人提供の作業映像を、冒頭のフックと中盤の説明に使う。 */
+.sales-hero:has(.automation-film){padding:34px 24px 38px}
+.sales-hero:has(.automation-film) .sales-proof{margin:0 0 18px}
+.automation-hook{font:750 clamp(24px,3.2vw,30px)/1.5 var(--lp-font);letter-spacing:.03em;color:#fff8e7;margin:26px 0 21px}
+.automation-film{width:100%;max-width:800px;margin:30px auto 0;text-align:center}
+.automation-film video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#080d11;border:1px solid #b79b58;border-radius:6px;box-shadow:0 12px 40px #0005}
+.automation-film figcaption{font:500 14px/1.8 var(--lp-font);color:#ddc79b;margin-top:10px}
+.automation-film.is-hero{max-width:620px;margin:0 auto}
+.automation-film.is-hero video{box-shadow:0 0 36px #b58c2b24,0 12px 32px #0008}
+.automation-film.is-hero figcaption{color:#e7d7b4}
+.sales-hero:has(.automation-film) .sales-sub{margin:15px 0 0}
+.sales-hero:has(.automation-film) h1{font-size:clamp(48px,6.4vw,80px);margin:14px 0 0;line-height:1.22}
+.sales-hero:has(.automation-film) h1 span{margin-top:7px}
+@media(max-width:700px){
+ .sales-hero:has(.automation-film){padding:28px 18px 31px}
+ .sales-hero:has(.automation-film) .sales-proof{font-size:19px;line-height:1.8;margin-bottom:16px}
+ .automation-hook{font-size:24px;line-height:1.5;margin:23px 0 17px;letter-spacing:.01em}
+ .automation-film{margin-top:24px}
+ .automation-film figcaption{font-size:12px;margin-top:8px}
+ .automation-film.is-hero{margin-bottom:0}
+ .sales-hero:has(.automation-film) .sales-sub{font-size:16px;margin-top:17px}
+ .sales-hero:has(.automation-film) h1{font-size:51px;margin-top:14px}
+ .sales-hero:has(.automation-film) h1 span{font-size:27px;line-height:1.5}
+}
+@media(max-width:359px){
+ .automation-hook{font-size:21px}
+ .sales-hero:has(.automation-film) .sales-proof{font-size:17px}
+ .sales-hero:has(.automation-film) .sales-sub{font-size:14px}
+ .sales-hero:has(.automation-film) h1{font-size:46px}
+ .sales-hero:has(.automation-film) h1 span{font-size:24px}
+}
