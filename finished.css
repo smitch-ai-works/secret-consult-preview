@@ -502,7 +502,7 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 .automation-film figcaption{font:500 14px/1.8 var(--lp-font);color:#ddc79b;margin-top:10px}
 .automation-film.is-hero{max-width:620px;margin:0 auto}
 .automation-film.is-hero video{box-shadow:0 0 36px #b58c2b24,0 12px 32px #0008}
-.automation-film.is-hero figcaption{color:#e7d7b4;font-size:14px;max-width:570px;margin:10px auto 0}
+.automation-film.is-hero figcaption{color:#e7d7b4;font-size:16px;max-width:570px;margin:10px auto 0}
 .sales-hero:has(.automation-film) .sales-sub{margin:15px 0 0}
 .sales-hero:has(.automation-film) h1{font-size:clamp(48px,6.4vw,80px);margin:14px 0 0;line-height:1.22}
 .sales-hero:has(.automation-film) h1 span{margin-top:7px}
@@ -518,7 +518,7 @@ body.sales-page{background:#05070b;color:#f8f3e7}
  .sales-hero:has(.automation-film) h1 span{font-size:27px;line-height:1.5}
 }
 @media(max-width:359px){
- .automation-hook{font-size:21px}
+ .automation-hook{font-size:20px}
  .sales-hero:has(.automation-film) .sales-proof{font-size:17px}
  .sales-hero:has(.automation-film) .sales-sub{font-size:14px}
  .sales-hero:has(.automation-film) h1{font-size:46px}
