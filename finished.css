@@ -329,7 +329,7 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 .benefit-photos.layout-collection .benefit-photo:first-child img{aspect-ratio:16/9}
 @media(max-width:700px){.benefit-photos.layout-quad{gap:8px}.benefit-photos.layout-collection{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
 
-@font-face{font-family:"LP Sans";src:url("assets/fonts/NotoSansJP-LP.woff2?v=copy-v24") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"LP Sans";src:url("assets/fonts/NotoSansJP-LP.woff2?v=real-line-v25") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 /* 本文・見出し・図解を同じ書体と色の体系に揃える。企画名は既存のロゴ表現。 */
 .sales-page{--lp-font:"LP Sans","Yu Gothic",Meiryo,sans-serif;--lp-panel:#101c28;--lp-line:#b6965066;--lp-gold:#f1d28a}
 .sales-page .sales-letter,.sales-page .sales-section h2,.sales-page .sales-section h3,.sales-page .sales-diagram,.sales-page .sales-diagram h3,.sales-page .sales-diagram strong,.sales-page .benefit-photo figcaption{font-family:var(--lp-font)}
@@ -525,7 +525,7 @@ body.sales-page{background:#05070b;color:#f8f3e7}
  .sales-hero:has(.automation-film) h1 span{font-size:24px}
 }
 
-@font-face{font-family:"LP Display";src:url("assets/fonts/LaunchMincho-v23.woff2?v=copy-v24") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"LP Display";src:url("assets/fonts/LaunchMincho-v23.woff2?v=real-line-v25") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 /* バナーと同じ黒・深紅・鏡面の金。本文の読みやすさは従来のゴシックで保つ。 */
 body.sales-page{background:#020203;--lp-panel:#15100f;--lp-line:#a8884466;--lp-gold:#ffe39a;--lp-display:"LP Display","Yu Mincho",serif}
 .sales-page .sales-hero,.sales-page .sales-hero:has(.automation-film){padding:0;background:radial-gradient(ellipse at 50% 65%,#320207aa,transparent 65%),#020203;overflow:hidden}
@@ -595,4 +595,25 @@ body.sales-page{background:#020203;--lp-panel:#15100f;--lp-line:#a8884466;--lp-g
 @media(max-width:359px){
  .automation-opening .automation-film.is-hero figcaption{font-size:17px;line-height:1.9}
  .owner-claim-amount{font-size:44px}
+}
+
+/* Supplied mobile screenshots: preserve their original lettering and proportions. */
+.sales-page .participant-photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:30px auto 24px;max-width:100%;align-items:start}
+.sales-page .participant-photos figure{margin:0;min-width:0;border:1px solid #d2b57070;background:#090b0e;overflow:hidden}
+.sales-page .participant-photos button{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.sales-page .participant-photos img{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;object-position:50% 37%}
+.sales-page .participant-photos button:focus-visible{outline:3px solid #f9df91;outline-offset:-4px}
+.sales-page .line-shot-gallery{columns:2;column-gap:18px;max-width:none;margin:24px auto 0}
+.sales-page .line-shot-gallery>.line-shot{display:inline-block;width:100%;margin:0 0 18px;vertical-align:top;break-inside:avoid;border:1px solid #d2b57070;background:#272727;box-shadow:none}
+.sales-page .line-shot-gallery>.line-shot:last-child:nth-child(odd){width:100%;margin-inline:0}
+.sales-page .line-shot img{width:100%;height:auto;object-fit:contain}
+.sales-page .voice-image-dialog{max-width:850px;padding:14px;background:#11161c;border-color:#d2b570;color:#faf6eb}
+.sales-page .voice-image-scroll{background:#1d232a}
+.sales-page .voice-image-scroll img{width:var(--shot-width);max-width:none;height:auto;margin:0}
+.sales-page .voice-image-dialog.is-fit .voice-image-scroll img{width:100%;max-width:100%;height:auto;margin:0}
+@media(max-width:700px){
+ .sales-page .participant-photos{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:24px}
+ .sales-page .line-shot-gallery{columns:1;max-width:540px;margin-top:22px}
+ .sales-page .line-shot-gallery>.line-shot{margin-bottom:15px}
+ .sales-page .voice-image-dialog{padding:10px}
 }
