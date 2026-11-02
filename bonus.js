@@ -83,3 +83,94 @@ form.addEventListener('submit',event=>{event.preventDefault();if(!form.reportVal
 form.querySelector('[data-copy]')?.addEventListener('click',async()=>{if(!output.value)return;try{await navigator.clipboard.writeText(output.value);note('コピーしました。')}catch{output.focus();output.select();note('文章を選択しました。コピーして使ってください。');}});
 form.querySelector('[data-download]')?.addEventListener('click',()=>{if(!output.value)return;const url=URL.createObjectURL(new Blob(['\ufeff'+output.value],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='特典'+volume+'_実践メモ.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);note('保存用のテキストファイルを作りました。');});
 })();
+
+/* 既存v15の入力と保存キーを保ち、完成確認と段階別の読み取りを追加。 */
+(()=>{'use strict';
+ const form=document.querySelector('form[data-tool]');
+ document.querySelectorAll('[data-select-prompt]').forEach(b=>b.addEventListener('click',()=>{
+  const target=document.querySelector('[data-prompt-kind="'+b.dataset.selectPrompt+'"]');
+  if(target){target.click();target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});target.focus({preventScroll:true});}
+ }));
+ if(!form)return;
+ const kind=form.dataset.tool,volume=form.dataset.volume;
+ const get=n=>(form.elements.namedItem(n)?.value||'').trim();
+ const number=n=>get(n)===''?null:Number(get(n));
+ const text=(tag,value)=>{const x=document.createElement(tag);x.textContent=value;return x};
+ const rate=(a,b)=>a==null||b==null?'未入力':b===0?'算出しない（母数0）':(100*a/b).toFixed(2)+'%';
+ const labels={Scene:'相手の場面',Facts:'仕様と素材',Terms:'案件条件',Destination:'案内先'};
+ const routes=[['04','条件メモを完成させる','報酬・成果・承認・購入条件を確認する。'],['05','相手と場面を一つにする','商品を選ぶ場面と、見せる事実を決める。'],['09','足りない素材をそろえる','必要な形・動き・仕様と、その出所を確認する。'],['08','一回分の紹介を作る','設計メモを渡し、構成から確定原稿まで進める。'],['10','反応を残して見直す','公開日・同じ期間の数字・次に試す一つを記録する。']];
+ function update(){
+  if(kind==='route'){
+   const box=form.querySelector('[data-route-next]');box.replaceChildren();
+   const i=routes.findIndex((_,i)=>!form.elements.namedItem('stage'+i).checked);
+   if(i<0){box.append(text('strong','5点がそろいました。次は、10で反応を見直します。'));return;}
+   const [n,title,description]=routes[i];box.append(text('strong','次に見る場所：'+title),text('p',description));
+   const a=text('a','特典'+n+'のシートを開く');a.href=n+'.html#practice';box.append(a);
+  }
+  if(kind==='metrics'){
+   const box=form.querySelector('[data-funnel-live]');box.replaceChildren(text('h3','クリックの先も、段階を分ける。'));
+   const row=(a,b,c)=>{const r=document.createElement('div');r.className='funnel-row';r.append(text('span',a),text('strong',b),text('strong',c));box.append(r)};
+   row('段階','前回','今回');
+   for(const [label,n,d] of [['クリック率','Clicks','Views'],['クリック→発生','Occurred','Clicks'],['発生→承認','ApprovedCount','Occurred']])row(label,rate(number('a'+n),number('a'+d)),rate(number('b'+n),number('b'+d)));
+   let invalid=false;
+   for(const k of ['a','b']){
+    const occured=number(k+'Occurred'),approved=number(k+'ApprovedCount');
+    if(occured!=null&&approved!=null&&approved>occured){const p=text('p',(k==='a'?'前回':'今回')+'：承認件数は発生件数以下にしてください。');p.className='error';box.append(p);invalid=true;}
+   }
+   box.append(text('p',invalid?'入力の件数を確認してください。':'未確認の件数は空欄で構いません。0件と、未確認を分けて残します。'));
+   const clicks=number('bClicks'),occurred=number('bOccurred'),views=number('bViews');
+   let suggestion='比較期間・相手・案内先などの条件と、今回変えた箇所を一緒に確認します。';
+   if(views===0)suggestion='見られた数が0件です。計測期間と公開状態を先に確認します。';
+   else if(clicks===0&&views>0)suggestion='表示はあり、クリックは0件。案内が見える位置・言葉・リンクが開くかを確認します。';
+   else if(clicks>0&&occurred===0)suggestion='クリックはあり、発生は0件。案内内容と行き先の一致、成果条件、計測期間を確認します。';
+   box.append(text('p','次に確認する場所：'+suggestion));
+  }
+ }
+ update();form.addEventListener('input',update);form.addEventListener('change',update);
+ form.querySelector('[data-example]')?.addEventListener('click',()=>{
+  if(kind==='metrics'){
+   for(const [name,v] of Object.entries({aOccurred:'5',aApprovedCount:'3',bOccurred:'5',bApprovedCount:'4',aApproved:'9000',bApproved:'12000',aCost:'1000',bCost:'2000'})){form.elements.namedItem(name).value=v;}
+  }
+  if(kind==='research')for(const k of ['a','b'])for(const suffix of Object.keys(labels))form.elements.namedItem(k+'Check'+suffix).value='unknown';
+  form.dispatchEvent(new Event('input',{bubbles:true}));
+ });
+ form.querySelector('[data-clear]')?.addEventListener('click',update);
+ form.addEventListener('submit',event=>{
+  form.querySelector('.output-panel').hidden=true;
+  if(kind==='metrics')for(const k of ['a','b']){
+   const occurred=number(k+'Occurred'),approved=number(k+'ApprovedCount');
+   if(occurred!=null&&approved!=null&&approved>occurred){
+    event.preventDefault();event.stopImmediatePropagation();
+    const status=form.querySelector('[data-tool-status]');status.textContent='承認件数は発生件数以下にしてください。';status.classList.add('error');return;
+   }
+  }
+ },true);
+ form.addEventListener('submit',()=>{
+  if(!form.reportValidity())return;
+  const output=form.querySelector('[data-output]');const panel=form.querySelector('.output-panel');
+  if(panel.hidden||!output.value)return;
+  const review=form.querySelector('[data-result-review]');review.replaceChildren();review.hidden=false;
+  let checks=[];
+  if(kind==='design')checks=[['audience','相手'],['scene','使う場面'],['facts','商品の事実'],['source','出所'],['reason','相手が選ぶ理由'],['destination','案内先']];
+  if(kind==='offer')checks=[['reward','報酬'],['conversion','成果条件'],['approval','承認条件'],['purchase','購入条件'],['source','確認先と日付']];
+  if(kind==='plan')checks=[['slot','作業枠'],['finish','完成物'],['materials','先に開くもの'],['restart','次の作業']];
+  if(kind==='week')checks=[['restart','再開する場所']];
+  const missing=checks.filter(([n])=>!get(n)).map(([,label])=>label);
+  review.append(text('strong',missing.length?'次に埋める材料':'完成したメモの使い方'));
+  review.append(text('p',missing.length?missing.join('・')+'を追加すると、次の工程へ進めます。':({'design':'05の設計を08へ読み込み、構成案を作れます。','offer':'条件が不明な箇所は、紹介前に確認先へ質問します。','plan':'決めた時間になったら、記入した資料から始めます。','week':'次の作業枠では「再開する場所」を先に開きます。','route':'表示された次の資料で、未完了の一段階を進めます。','prompts':'AIへ貼り付け、出力例と照らしてから採る案を選びます。','research':'不足がある候補は、先に確認する材料を一つ決めます。','metrics':'次に変える一つと、比較する期間を決めて記録します。'}[kind]||'記録した内容を次の一回に使います。')));
+  if(kind==='research'){
+   let addition='\n\n着手する材料の確認';
+   for(const k of ['a','b']){
+    addition+='\n候補'+k.toUpperCase();
+    for(const [suffix,label] of Object.entries(labels))addition+='\n'+label+'：'+({ready:'確認済み',missing:'不足あり',unknown:'未確認'}[get(k+'Check'+suffix)]||'未確認');
+   }
+   output.value+=addition;
+   review.append(text('p','確認済みの項目が多いことは、売上の予測ではありません。自分で着手できる材料として比較します。'));
+  }
+  if(kind==='metrics'){
+   let addition='\n\n段階別の割合';
+   for(const k of ['a','b'])addition+='\n'+(k==='a'?'前回':'今回')+'｜クリック→発生：'+rate(number(k+'Occurred'),number(k+'Clicks'))+'｜発生→承認：'+rate(number(k+'ApprovedCount'),number(k+'Occurred'));
+   output.value+=addition;
+  }
+ });
+})();
