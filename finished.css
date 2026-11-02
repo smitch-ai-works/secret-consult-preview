@@ -329,7 +329,7 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 .benefit-photos.layout-collection .benefit-photo:first-child img{aspect-ratio:16/9}
 @media(max-width:700px){.benefit-photos.layout-quad{gap:8px}.benefit-photos.layout-collection{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
 
-@font-face{font-family:"LP Sans";src:url("assets/fonts/NotoSansJP-LP.woff2?v=illustrated-v14") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"LP Sans";src:url("assets/fonts/NotoSansJP-LP.woff2?v=automation-v18") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
 /* 本文・見出し・図解を同じ書体と色の体系に揃える。企画名は既存のロゴ表現。 */
 .sales-page{--lp-font:"LP Sans","Yu Gothic",Meiryo,sans-serif;--lp-panel:#101c28;--lp-line:#b6965066;--lp-gold:#f1d28a}
 .sales-page .sales-letter,.sales-page .sales-section h2,.sales-page .sales-section h3,.sales-page .sales-diagram,.sales-page .sales-diagram h3,.sales-page .sales-diagram strong,.sales-page .benefit-photo figcaption{font-family:var(--lp-font)}
@@ -502,7 +502,7 @@ body.sales-page{background:#05070b;color:#f8f3e7}
 .automation-film figcaption{font:500 14px/1.8 var(--lp-font);color:#ddc79b;margin-top:10px}
 .automation-film.is-hero{max-width:620px;margin:0 auto}
 .automation-film.is-hero video{box-shadow:0 0 36px #b58c2b24,0 12px 32px #0008}
-.automation-film.is-hero figcaption{color:#e7d7b4}
+.automation-film.is-hero figcaption{color:#e7d7b4;font-size:14px;max-width:570px;margin:10px auto 0}
 .sales-hero:has(.automation-film) .sales-sub{margin:15px 0 0}
 .sales-hero:has(.automation-film) h1{font-size:clamp(48px,6.4vw,80px);margin:14px 0 0;line-height:1.22}
 .sales-hero:has(.automation-film) h1 span{margin-top:7px}
