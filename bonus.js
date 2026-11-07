@@ -174,3 +174,68 @@ form.querySelector('[data-download]')?.addEventListener('click',()=>{if(!output.
   }
  });
 })();
+
+/* BONUS_V32_START */
+(()=>{'use strict';
+const examples=window.BONUS_V32_EXAMPLES||{};
+const form=document.querySelector('form[data-tool]');
+if(form){
+ const volume=form.dataset.volume,kind=form.dataset.tool;
+ const value=n=>(form.elements.namedItem(n)?.value||'').trim();
+ const extra=[...form.querySelectorAll('[data-v32-field]')];
+ const routeNames=['条件・登録・承認・リンクの確認','相手と場面の設計','使う素材の準備','原稿・映像・案内先の照合','公開日と見直す日の記録'];
+ function updateRoute(){
+  if(kind!=='route')return;
+  const box=form.querySelector('[data-route-next]');box.replaceChildren();
+  const i=routeNames.findIndex((_,i)=>!form.elements.namedItem('stage'+i).checked);
+  const strong=document.createElement('strong');strong.textContent=i<0?'一回分の準備と記録がそろいました。':'次に終わらせるもの：'+routeNames[i];box.append(strong);
+  const p=document.createElement('p');p.textContent=i<0?'決めた見直す日に、同じ期間の反応を残し、次に変える一つを決めます。':['このページの手順01で登録・承認・リンクを確認し、初期設定メモへ残します。','手順02〜03で参考と四場面を決めます。','手順03で、各場面に使う素材と出所をそろえます。','手順04で、実際に原稿・映像・案内先を照合します。','手順05で、見直す日と記録する数字を決めます。'][i];box.append(p);
+  const a=document.createElement('a');a.href='#lesson-'+([1,2,3,4,5][Math.max(0,i)]);a.textContent='このページの手順へ戻る';box.append(a);
+ }
+ updateRoute();form.addEventListener('input',updateRoute);form.addEventListener('change',updateRoute);
+ form.querySelector('[data-clear]')?.addEventListener('click',updateRoute);
+ form.querySelector('[data-example]')?.addEventListener('click',()=>{
+  for(const [name,v] of Object.entries(examples[volume]||{})){const field=form.elements.namedItem(name);if(field)field.value=v;}
+  form.dispatchEvent(new Event('input',{bubbles:true}));
+ });
+ form.addEventListener('submit',()=>{
+  const panel=form.querySelector('.output-panel'),output=form.querySelector('[data-output]');
+  if(panel.hidden||!output.value)return;
+  if(extra.length)output.value+='\n\n'+({'02':'観察から改善へ','04':'報酬設定の確認','06':'最初の一本の制作メモ','09':'今回の参入ルート','10':'次の比較'}[volume]||'追加メモ')+'\n'+extra.map(x=>x.dataset.v32Field+'：'+(x.tagName==='SELECT'?(x.selectedOptions[0]?.textContent||'未選択'):(value(x.name)||'［未記入］'))).join('\n\n');
+  const review=form.querySelector('[data-result-review]');
+  if(volume==='02'&&review){review.replaceChildren();const p=document.createElement('p');p.textContent=value('ownChange')?'観察した事実と理由を読み、自分の素材で変える一つから制作を始めます。':'参考・判断理由・自分の変更点を埋めると、時間割だけでなく制作の判断を再開できます。';review.append(p);review.hidden=false;}
+  if(volume==='06'&&review){review.replaceChildren();const p=document.createElement('p');p.textContent='初期設定の状態を自分の管理画面で確かめ、未完了の一段階から進めます。このメモは承認やリンク計測の成否を自動判定するものではありません。';review.append(p);review.hidden=false;}
+ });
+}
+
+const caption=document.querySelector('[data-caption-tool]');if(!caption)return;
+const key='secret-bonus-v32-caption',input=caption.elements.namedItem('captionRows'),status=caption.querySelector('[data-caption-status]'),panel=caption.querySelector('[data-caption-panel]'),out=caption.querySelector('[data-caption-output]');
+const note=(message,error=false)=>{status.textContent=message;status.classList.toggle('error',error)};
+try{const saved=localStorage.getItem(key);if(saved!==null)input.value=saved;}catch{}
+const persist=()=>{try{localStorage.setItem(key,input.value);return true}catch{return false}};
+input.addEventListener('input',()=>{panel.hidden=true;note(persist()?'入力を保存しました。時刻と字幕を確認してから作成してください。':'端末へ保存できません。必要な入力はコピーして残してください。')});
+caption.querySelector('[data-caption-example]').addEventListener('click',()=>{input.value='0 | 2.4 | 外へ持っていくブラシを選ぶなら、\n2.4 | 4.8 | 開いた形だけでなく、\n4.8 | 7.2 | 折りたたんだ形とケースも。\n7.2 | 10.5 | サイズと購入条件は、\\n商品ページで確認してください。';panel.hidden=true;persist();note('作例を入れました。自分の音声で確認した時刻と字幕へ置き換えてください。');});
+caption.querySelector('[data-caption-clear]').addEventListener('click',()=>{input.value='';out.value='';panel.hidden=true;try{localStorage.removeItem(key)}catch{}note('この字幕欄の入力を空にしました。');});
+const time=ms=>{const hour=Math.floor(ms/3600000),min=Math.floor(ms%3600000/60000),sec=Math.floor(ms%60000/1000),msec=ms%1000;return [hour,min,sec].map(x=>String(x).padStart(2,'0')).join(':')+','+String(msec).padStart(3,'0')};
+caption.addEventListener('submit',event=>{event.preventDefault();panel.hidden=true;out.value='';
+ try{
+  const lines=input.value.split(/\r?\n/).map((line,i)=>({line:line.trim(),i:i+1})).filter(x=>x.line);
+  if(!lines.length)throw new Error('秒数と字幕を一行以上入力してください。');
+  let previousEnd=0;const entries=[];
+  for(const {line,i} of lines){
+   const parts=line.split('|');if(parts.length<3)throw new Error(i+'行目：開始秒 | 終了秒 | 字幕 の順に入力してください。');
+   const first=parts.shift().trim(),last=parts.shift().trim(),text=parts.join('|').trim().replace(/\\n/g,'\n');
+   if(!/^\d+(?:\.\d{1,3})?$/.test(first)||!/^\d+(?:\.\d{1,3})?$/.test(last))throw new Error(i+'行目：秒数は0以上、小数点以下3桁までの数値にしてください。');
+   const start=Math.round(Number(first)*1000),end=Math.round(Number(last)*1000);
+   if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||end<=start)throw new Error(i+'行目：終了は開始より後の時刻にしてください。');
+   if(start<previousEnd)throw new Error(i+'行目：前の字幕の終了と重なっています。音声で確認し、時刻を直してください。');
+   if(!text||text.split('\n').some(x=>!x.trim()))throw new Error(i+'行目：字幕本文を入力し、空の改行を除いてください。');
+   entries.push(entries.length+1+'\n'+time(start)+' --> '+time(end)+'\n'+text);previousEnd=end;
+  }
+  out.value=entries.join('\n\n')+'\n';panel.hidden=false;persist();note(entries.length+'件のSRTを作りました。保存して、編集ソフトで全編を照合してください。');
+ }catch(error){note(error.message,true);}
+});
+caption.querySelector('[data-caption-copy]').addEventListener('click',async()=>{if(!out.value)return;try{await navigator.clipboard.writeText(out.value);note('SRTの内容をコピーしました。')}catch{out.focus();out.select();note('コピーできませんでした。選択した内容を手動でコピーしてください。',true)}});
+caption.querySelector('[data-caption-download]').addEventListener('click',()=>{if(!out.value)return;const url=URL.createObjectURL(new Blob(['\ufeff'+out.value],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='字幕.srt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);note('字幕.srtの保存を開始しました。編集ソフトで読み込み、音声と照合してください。');});
+})();
+/* BONUS_V32_END */
