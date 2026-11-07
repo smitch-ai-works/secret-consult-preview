@@ -5,7 +5,7 @@
 - index.html：入口
 - lp.html：募集LP（予約先は未接続）
 - bonuses.html：参加特典ライブラリ
-- 02.html〜10.html：完成見本、各5節の図解、端末内で使う実践機能
+- 02.html〜10.html：図・練習例、端末内で使う実践機能
 - workbook.html：印刷・記入用シート9枚
 - downloads/：使い方と記入例のテキスト
 
