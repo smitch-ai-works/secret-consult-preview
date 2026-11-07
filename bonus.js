@@ -239,3 +239,59 @@ caption.querySelector('[data-caption-copy]').addEventListener('click',async()=>{
 caption.querySelector('[data-caption-download]').addEventListener('click',()=>{if(!out.value)return;const url=URL.createObjectURL(new Blob(['\ufeff'+out.value],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='字幕.srt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);note('字幕.srtの保存を開始しました。編集ソフトで読み込み、音声と照合してください。');});
 })();
 /* BONUS_V32_END */
+
+/* BONUS_V35_START */
+(()=>{'use strict';
+const examples={"04": {"product": "カームセブン（2026/4/11講義の案件例）", "reward": "講義では1件1,000円のコース例。現行の適用額は自分の管理画面で確認。", "conversion": "自分の広告詳細で、成果となる申込・購入の条件を確認する。", "target": "自分に適用されるコースと対象者を確認する。", "approval": "広告詳細の否認条件と、承認の状態を確認する。", "purchase": "単品・定期、初回条件、送料・継続・解約等を販売ページで確認する。", "source": "2026/4/11講義の説明例。実際に使う条件は管理画面の確認日とURLを記入する。", "unknown": "現在の適用報酬、成果地点、対象者、否認と購入条件。", "accountMemo": "提携申請・承認→広告詳細→素材→自分の固有リンクを取得する。"}, "05": {"shot1": "バッグと商品を同じ画面で見せる。", "shot2": "ブラシを開く→折りたたむ動き。", "shot3": "収納ケースへしまった形。", "shot4": "サイズと購入条件を確認できる商品ページの案内。"}, "08": {"shot1": "バッグと商品を同じ画面で見せる。", "shot2": "ブラシを開く→折りたたむ動き。", "shot3": "収納ケースへしまった形。", "shot4": "サイズと購入条件を確認できる商品ページの案内。"}, "09": {"entryRoute": "first", "searchMemo": "KINUI カームセブンを商品名で検索し、参考5〜10件の投稿時期・相手・冒頭・反応を並べる。確認日と対象期間を残す。", "aProduct": "KINUI カームセブンスージングセラム", "aScene": "美容液を比較し、商品と購入条件を確認したい人。", "aFacts": "公式の商品表記と、自分が使える商品外観・使用場面の素材を確認する。", "aTerms": "教材で扱われた案件例。現行の提携条件・適用報酬・成果地点は自分の管理画面で確認する。", "aUnknown": "素材の利用許可、現行条件、自分の固有リンク。", "bProduct": "ジオナ ハイドロスキンショットリフトラッピングマスク", "bScene": "自宅で使うマスクを比較し、形・使い方・購入条件を確かめたい人。", "bFacts": "公式の商品表記と、外観・使用方法の確認元を残す。効果は推測で足さない。", "bTerms": "教材では制作経験者が周辺商品へ広げる例。現行の案件有無と条件は要確認。", "bUnknown": "現在の案件有無、使える素材、対象者・成果条件。", "testHypothesis": "まずはカームセブンの参考構成を観察し、自分が使える素材で一本の紹介を作れるかを確認する。", "reviewDate": "検索日と対象期間、公開日と公開後の同じ日数で見直す日を記入する。", "next": "未投稿なら参考量のある入口から一本を通す。経験者は、同じ制作の型を近い商品へ展開できるかを比べる。"}};
+const form=document.querySelector('form[data-tool]');
+const get=n=>(form?.elements.namedItem(n)?.value||'').trim();
+const show=(message)=>{const s=form?.querySelector('[data-tool-status]');if(s)s.textContent=message;};
+function openTarget(hash){
+ if(!hash||hash.length<2)return;
+ const target=document.getElementById(decodeURIComponent(hash.slice(1)));if(!target)return;
+ for(let p=target.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>openTarget(a.hash)));
+openTarget(location.hash);
+document.querySelectorAll('[data-v35-copy-target]').forEach(b=>b.addEventListener('click',async()=>{
+ const text=document.getElementById(b.dataset.v35CopyTarget)?.innerText||'';
+ const status=b.parentElement.querySelector('[data-v35-copy-status]');
+ try{await navigator.clipboard.writeText(text);if(status)status.textContent='依頼文をコピーしました。自分の材料へ置き換えて使えます。';}
+ catch{if(status)status.textContent='依頼文を選択してコピーしてください。';}
+}));
+if(!form)return;
+const n=form.dataset.volume,kind=form.dataset.tool;
+form.querySelector('[data-example]')?.addEventListener('click',()=>{
+ for(const [name,value] of Object.entries(examples[n]||{})){const x=form.elements.namedItem(name);if(x)x.value=value;}
+ form.dispatchEvent(new Event('input',{bubbles:true}));
+});
+if(kind==='route'){
+ const targets=['setupMemo','firstOutline','firstOutline','checklist','reviewDate'];
+ function update(){
+  const i=Array.from({length:5},(_,i)=>i).find(i=>!form.elements.namedItem('stage'+i).checked);
+  const box=form.querySelector('[data-route-next]');
+  const a=box?.querySelector('a');if(!a)return;
+  a.href='#'+(targets[i]||'reviewDate');a.textContent='必要な記入欄へ進む';
+  const p=box.querySelector('p');if(p)p.textContent=i==null?'見直す日に同じ期間の数字を残します。':'できていない段階の材料を、下の制作メモへ残して進めます。';
+  a.addEventListener('click',()=>openTarget(a.hash),{once:true});
+ }
+ update();form.addEventListener('input',update);form.addEventListener('change',update);
+ form.querySelector('[data-example]')?.addEventListener('click',update);
+}
+form.addEventListener('submit',()=>{
+ const panel=form.querySelector('.output-panel'),output=form.querySelector('[data-output]');
+ if(panel.hidden||!output.value)return;
+ if(kind==='design'||kind==='prompts'&&Number(form.querySelector('[data-prompt-kind][aria-pressed="true"]')?.dataset.promptKind)<4){
+  output.value+='\n\n四場面の素材割当\n'+['01 場面','02 事実','03 理由','04 案内'].map((label,i)=>label+'：'+(get('shot'+(i+1))||'［素材は未記入］')).join('\n');
+ }
+ if(kind==='design'){
+  const missing=[1,2,3,4].filter(i=>!get('shot'+i));
+  const review=form.querySelector('[data-result-review]');
+  if(missing.length&&review){const p=document.createElement('p');p.textContent='素材が未記入の場面：'+missing.join('・')+'。使う素材と出所を確認して追加してください。';review.append(p);}
+ }
+ if(kind==='metrics'){
+  output.value+='\n\n発生・承認の元件数\n'+['a','b'].map((key,i)=>(i?'今回':'前回')+'｜発生件数：'+(get(key+'Occurred')||'［未確認］')+'｜承認件数：'+(get(key+'ApprovedCount')||'［未確認］')).join('\n');
+ }
+});
+})();
+/* BONUS_V35_END */
